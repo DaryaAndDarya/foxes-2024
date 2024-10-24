@@ -1,18 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
+import { useAppDispatch, useAppSelector } from '../../hooks/hook';
+import { setModal } from '../../redux/coffee/coffeeSlice';
+import OrderModal from '../ui/OrderModal';
 
 export default function CoffeeMachinePage(): JSX.Element {
   const [coffeeType, setCoffeeType] = useState('Espresso');
   const [size, setSize] = useState('Small');
   const [sugar, setSugar] = useState(0);
   const [milk, setMilk] = useState(false);
-  const coffeeTypes = ['Кофе 1', 'Кофе 2', 'Кофе 3'];
-
-  const handleOrder = () => {
+  const coffee = useAppSelector((store) => store.coffee.coffee);
+  const coffeeTypes = coffee.map((el) => el.title);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    setSize('Small');
+    setSugar(0);
+    setMilk(false);
+  }, []);
+  const handleOrder = (): void => {
+    dispatch(setModal({ coffeeType, size, sugar, milk }));
     console.log('Заказ:', { coffeeType, size, sugar, milk });
   };
 
@@ -46,7 +56,7 @@ export default function CoffeeMachinePage(): JSX.Element {
               value={sugar}
               min="0"
               max="5"
-              onChange={(e) => setSugar(parseInt(e.target.value))}
+              onChange={(e) => setSugar(Number(e.target.value))}
             />
           </Col>
         </Row>
@@ -62,7 +72,10 @@ export default function CoffeeMachinePage(): JSX.Element {
         </Row>
         <Button
           variant="success"
-          onClick={handleOrder}
+          onClick={() => {
+            
+            handleOrder();
+          }}
           style={{
             backgroundColor: '#e7e7e7',
             color: '#00005c',
@@ -73,6 +86,7 @@ export default function CoffeeMachinePage(): JSX.Element {
           Заказать
         </Button>
       </Form>
+      <OrderModal />
     </Container>
   );
 }

@@ -7,8 +7,17 @@ class CoffeeService {
   constructor(private readonly client: AxiosInstance) {}
 
   async getCoffee(): Promise<CoffeeTypeDb[]> {
-    const { data } = await this.client<CoffeeTypeDb[]>('/coffees');
-    return CoffeeSchema.array().parse(data);
+    try {
+      const { data } = await this.client<CoffeeTypeDb[]>('/coffees');
+      return CoffeeSchema.array().parse(data);
+    } catch (error) {
+      // обработка неудачного запроса и неполученных данных
+      // console.log error.issues
+      // повторный запрос каждые 5 секунд, пока не будет успех
+      // return [];
+      console.log(error);
+      throw error;
+    }
   }
 
   async addCoffee(Coffee: CoffeeTypeForm): Promise<CoffeeTypeDb> {

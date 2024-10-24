@@ -3,9 +3,11 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import CoffeeCard from '../ui/CoffeeCard';
 import CoffeeForm from '../ui/CoffeeForm';
+import useCoffee from '../../hooks/useCoffee';
 
 export default function CoffeePage(): JSX.Element {
   const [show, setShow] = useState(false);
+  const { coffee, deleteHandler } = useCoffee();
   return (
     <>
       <Row className="mb-3">
@@ -23,10 +25,9 @@ export default function CoffeePage(): JSX.Element {
           {show && <CoffeeForm />}
       </Row>
       <Row className="mb-3">
-      <CoffeeCard  />
-      <CoffeeCard  />
-      <CoffeeCard  />
-      <CoffeeCard  />
+        {coffee.map((el) => (
+          <CoffeeCard key={el.id} onecoffee={el} deleteHandler={deleteHandler}/>
+        ))}
       </Row>
     </>
   );

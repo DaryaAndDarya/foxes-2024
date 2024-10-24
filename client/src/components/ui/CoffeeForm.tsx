@@ -4,9 +4,10 @@ import Button from 'react-bootstrap/Button';
 import useCoffee from '../../hooks/useCoffee';
 
 export default function CoffeeForm(): JSX.Element {
+  const { submithandler } = useCoffee();
 
   return (
-    <Form>
+    <Form onSubmit={submithandler}>
       <Form.Label className="mb-3">Название вашего авторского кофе</Form.Label>
       <Form.Control
         name="title"
